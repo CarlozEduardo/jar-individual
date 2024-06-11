@@ -22,6 +22,8 @@ public class Registro {
     private Double consumoCPU;
     private Double consumoRam;
     private Double consumoDisco;
+    private String internet;
+    private Integer velocidadeMpbs;
 
     //Construtor
     public Registro() {
@@ -29,10 +31,18 @@ public class Registro {
         for (int i = 0; i < looca.getGrupoDeDiscos().getVolumes().size(); i++) {
             disco += Conversor.converterDoubleTresDecimais(Conversor.formatarBytes(looca.getGrupoDeDiscos().getVolumes().get(i).getTotal() - looca.getGrupoDeDiscos().getVolumes().get(i).getDisponivel()));
         }
+
+        List<RedeInterface> listaRede = looca.getRede().getGrupoDeInterfaces().getInterfaces().stream().filter(redeInterface -> !redeInterface.getEnderecoIpv4().isEmpty()).toList();
+
         this.permanenciaDeDados = new Timer();
         this.consumoCPU = Conversor.converterDoubleDoisDecimais(looca.getProcessador().getUso());
         this.consumoRam = Conversor.converterDoubleTresDecimais(Conversor.formatarBytes(looca.getMemoria().getEmUso()));
         this.consumoDisco = disco;
+
+        Boolean velocidadeEstavel = listaRede.get(0).getBytesRecebidos().intValue() > 10000000 ? true : false;
+        this.internet = velocidadeEstavel ? "Sua internet está estável" : "Sua internet não está estável";
+
+        this.velocidadeMpbs = listaRede.get(0).getBytesRecebidos().intValue() / 1000000;
     }
 
     public void inserirRegistros(Integer idMaquina, Limite trigger) {
@@ -55,8 +65,10 @@ public class Registro {
                     |Consumo da CPU: %.2f
                     |Consumo da RAM: %.2f
                     |Consumo da Disco: %.2f
+                    |Internet: %s
+                    |Velocidade em Mpbs: %d 
                     *------------------------------------*
-                                """.formatted(getConsumoCPU(), getConsumoRam(),getConsumoDisco()));
+                                """.formatted(getConsumoCPU(), getConsumoRam(),getConsumoDisco(), getInternet(), getVelocidadeMpbs()));
                         triggerRegistro(idMaquina, trigger); // Pos inserção de registro dos volateis
                     }
                 },0, 50000);
@@ -79,12 +91,6 @@ public class Registro {
 
                     // Insert do alerta
                     conec.update("INSERT INTO alerta(dataAlerta, fkRegistro) VALUES (?, ?)", new Timestamp(data.getTime()), fkRegistro);
-
-                    System.out.println("""
-                            ------------------
-                            ALERTEI!!!!!!!!!!!
-                            ------------------
-                            """);
                 }
         } catch (EmptyResultDataAccessException e) {
             System.out.println("Erro no insert do trigger");
@@ -101,6 +107,14 @@ public class Registro {
 
     public Double getConsumoDisco() {
         return consumoDisco;
+    }
+
+    public String getInternet() {
+        return internet;
+    }
+
+    public Integer getVelocidadeMpbs() {
+        return velocidadeMpbs;
     }
 
     @Override

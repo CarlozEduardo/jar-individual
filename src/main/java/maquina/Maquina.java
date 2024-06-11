@@ -158,6 +158,7 @@ public class Maquina {
         }
         return false;
     }
+
     //Getter
 
     public Integer getIdMaquina() {
@@ -226,6 +227,7 @@ public class Maquina {
 
     @Override
     public String toString() {
+        coletarDadosMaquina();
         return "Maquina{" +
                 "idMaquina=" + idMaquina +
                 ", nome='" + nomeMaquina + '\'' +

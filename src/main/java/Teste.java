@@ -2,6 +2,7 @@ import com.github.britooo.looca.api.core.Looca;
 import com.github.britooo.looca.api.group.janelas.Janela;
 import com.github.britooo.looca.api.group.janelas.JanelaGrupo;
 import com.github.britooo.looca.api.group.processos.Processo;
+import com.github.britooo.looca.api.group.rede.RedeInterface;
 import conexao.Conexao;
 import maquina.Conversor;
 import maquina.Limite;
@@ -30,6 +31,15 @@ public class Teste {
 //            System.out.println("vazio");
 //        }
         Looca looca = new Looca();
+        //        List<RedeInterface> listaRede = looca.getRede().getGrupoDeInterfaces().getInterfaces().stream().filter(redeInterface -> !redeInterface.getEnderecoIpv4().isEmpty()).toList();
+//
+//        Boolean velocidadeEstavel = listaRede.get(0).getBytesRecebidos().intValue() > 10000000 ? true : false;
+//
+//        String internet = velocidadeEstavel ? "Sua internet está estável" : "Sua internet não está estável";
+//
+//        System.out.println(internet);
+
+
 //
 //        Double disco = 0.0;
 //        for (int i = 0; i < looca.getGrupoDeDiscos().getVolumes().size(); i++) {
@@ -42,6 +52,7 @@ public class Teste {
 //        System.out.println(lista);
 //        List<JanelaGrupo> lista2 = looca.getGrupoDeJanelas().getJanelasVisiveis().stream().filter().toList();
 //        System.out.println(lista2);
+
         Usuario usuario = new Usuario("joao@techinnovations.com", "senha123");
 
         Maquina maquina = new Maquina();
